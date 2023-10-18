@@ -10,7 +10,7 @@ import {
 import { UserValidation } from "@/lib/validations/user";
 import { IUserProps } from "@/utils/types";
 import Image from "next/image";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as zod from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,6 +23,7 @@ interface IAccountProfileProps extends IUserProps {
 }
 
 const AccountProfile = ({ title, user }: IAccountProfileProps) => {
+  const [files, setFiles] = useState<File[]>([]);
   const form = useForm<zod.infer<typeof UserValidation>>({
     resolver: zodResolver(UserValidation),
     defaultValues: {
@@ -40,7 +41,23 @@ const AccountProfile = ({ title, user }: IAccountProfileProps) => {
   const handleImageUpload = (
     e: ChangeEvent<HTMLInputElement>,
     fieldChange: (value: string) => void
-  ) => {};
+  ) => {
+    e.preventDefault();
+    const fileReader = new FileReader();
+
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setFiles(Array.from(e.target.files));
+      console.log({ file, files });
+      if (!file.type.includes("image")) return;
+
+      fileReader.onload = async (event) => {
+        const imageDataUrl = event.target?.result?.toString() || "";
+        fieldChange(imageDataUrl);
+      };
+      fileReader.readAsDataURL(file);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -58,7 +75,7 @@ const AccountProfile = ({ title, user }: IAccountProfileProps) => {
                 <FormLabel className="account-form_image-label">
                   {field.value ? (
                     <Image
-                      src="./assets/profile.svg"
+                      src={field.value}
                       alt="profile_icon"
                       width={96}
                       height={96}
