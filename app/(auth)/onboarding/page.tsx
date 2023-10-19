@@ -1,22 +1,13 @@
 import AccountProfile from "@/app/components/forms/AccountProfile";
+import { IUserProps } from "@/utils/types";
 import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
-
-const userDetails = {
-  id: "string",
-  objectId: "string",
-  username: "Nonso",
-  name: "Daniel",
-  bio: "This is just me saying this",
-  image: "Some random image",
-};
 
 const Page = async () => {
   const user = await currentUser();
   console.log({ user });
   if (!user) return null;
 
-  const userDetails = {
+  const userDetails: IUserProps = {
     id: user.id,
     objectId: "129jsdj929",
     username: user.username,

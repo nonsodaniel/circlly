@@ -17,12 +17,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { isImageBase64 } from "@/lib/utils";
+import { useUploadThing } from "@/lib/uploadthing";
 
-interface IAccountProfileProps extends IUserProps {
+interface IAccountProfileProps {
   title: string;
+  user: IUserProps;
 }
 
 const AccountProfile = ({ title, user }: IAccountProfileProps) => {
+  const { startUpload } = useUploadThing("media");
   const [files, setFiles] = useState<File[]>([]);
   const form = useForm<zod.infer<typeof UserValidation>>({
     resolver: zodResolver(UserValidation),
@@ -36,6 +40,16 @@ const AccountProfile = ({ title, user }: IAccountProfileProps) => {
 
   const onSubmit = async (values: zod.infer<typeof UserValidation>) => {
     console.log(values);
+    const blob = values.profile_photo;
+    const hasImageChanged = isImageBase64(blob);
+
+    if (hasImageChanged) {
+      const response = await startUpload(files);
+
+      if (response && response[0].fileUrl) {
+        values.profile_photo = response[0].fileUrl;
+      }
+    }
   };
 
   const handleImageUpload = (

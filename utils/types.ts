@@ -1,10 +1,8 @@
 export interface IUserProps {
-  user: {
-    id: string;
-    objectId: string;
-    username: string;
-    name: string;
-    bio: string;
-    image: string;
-  };
+  id: string;
+  objectId: string;
+  username: string | null;
+  name: string | null;
+  bio: string;
+  image: string;
 }
