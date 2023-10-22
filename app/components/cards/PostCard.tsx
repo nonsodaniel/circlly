@@ -3,12 +3,9 @@ import Link from "next/link";
 
 import { formatDateString } from "@/lib/utils";
 import { IPostCardProps } from "@/utils/types";
-// import Deletepost from "../forms/Deletepost";
 
 function PostCard({
   id,
-  currentUserId,
-  parentId,
   content,
   author,
   community,
@@ -94,14 +91,6 @@ function PostCard({
             </div>
           </div>
         </div>
-
-        {/* <Deletepost
-          postId={JSON.stringify(id)}
-          currentUserId={currentUserId}
-          authorId={author.id}
-          parentId={parentId}
-          isComment={isComment}
-        /> */}
       </div>
 
       {!isComment && comments.length > 0 && (

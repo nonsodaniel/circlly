@@ -1,6 +1,7 @@
 "use server";
 
 import Community from "../models/communityModels";
+import Post from "../models/postModel";
 import User from "../models/userModels";
 import { DBConnection } from "../mongoose";
 import { revalidatePath } from "next/cache";
@@ -54,5 +55,36 @@ export async function fetchUser(userId: string) {
     });
   } catch (error: any) {
     throw new Error(`Failed to fetch user: ${error.message}`);
+  }
+}
+
+export async function fetchUserPosts(userId: string) {
+  try {
+    DBConnection();
+
+    const posts = await User.findOne({ id: userId }).populate({
+      path: "posts",
+      model: Post,
+      populate: [
+        {
+          path: "community",
+          model: Community,
+          select: "name id image _id",
+        },
+        {
+          path: "children",
+          model: Post,
+          populate: {
+            path: "author",
+            model: User,
+            select: "name image id",
+          },
+        },
+      ],
+    });
+    return posts;
+  } catch (error) {
+    console.error("Error fetching user posts:", error);
+    throw error;
   }
 }
