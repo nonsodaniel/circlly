@@ -87,3 +87,85 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
 
   return { posts, isNext };
 }
+
+export async function fetchPostById(postId: string) {
+  DBConnection();
+
+  try {
+    const post = await Post.findById(postId)
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id id name image",
+      })
+      .populate({
+        path: "community",
+        model: Community,
+        select: "_id id name image",
+      })
+      .populate({
+        path: "children",
+        populate: [
+          {
+            path: "author",
+            model: User,
+            select: "_id id name parentId image",
+          },
+          {
+            path: "children",
+            model: Post,
+            populate: {
+              path: "author",
+              model: User,
+              select: "_id id name parentId image",
+            },
+          },
+        ],
+      })
+      .exec();
+
+    return post;
+  } catch (err) {
+    console.error("Error while fetching post:", err);
+    throw new Error("Unable to fetch post");
+  }
+}
+
+export const addCommentToPost = async (
+  postId: string,
+  commentText: string,
+  userId: string,
+  path: string
+) => {
+  DBConnection();
+
+  try {
+    // Find the original post by its ID
+    const originalpost = await Post.findById(postId);
+
+    if (!originalpost) {
+      throw new Error("post not found");
+    }
+
+    // Create the new comment post
+    const commentPost = new Post({
+      text: commentText,
+      author: userId,
+      parentId: postId, // Set the parentId to the original post's ID
+    });
+
+    // Save the comment post to the database
+    const savedCommentPost = await commentPost.save();
+
+    // Add the comment post's ID to the original post's children array
+    originalpost.children.push(savedCommentPost._id);
+
+    // Save the updated original post to the database
+    await originalpost.save();
+
+    revalidatePath(path);
+  } catch (err) {
+    console.error("Error while adding comment:", err);
+    throw new Error("Unable to add comment");
+  }
+};
