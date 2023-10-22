@@ -15,7 +15,7 @@ async function Page() {
     <>
       <h1 className="head-text">Create Post</h1>
 
-      <PublishPost userId={"userInfo._id"} />
+      <PublishPost userId={userInfo._id} />
     </>
   );
 }

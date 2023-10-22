@@ -38,6 +38,7 @@ function PublishPost({ userId }: Props) {
   });
 
   const onSubmit = async (values: z.infer<typeof PostValidation>) => {
+    console.log("called");
     await createPost({
       text: values.post,
       author: userId,
