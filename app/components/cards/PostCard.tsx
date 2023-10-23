@@ -39,10 +39,16 @@ function PostCard({
           </div>
 
           <div className="flex w-full flex-col">
-            <Link href={`/profile/${author?.id}`} className="w-fit">
+            <Link
+              href={`/profile/${author?.id}`}
+              className="w-fit flex gap-2 items-center"
+            >
               <h4 className="cursor-pointer text-base-semibold text-light-1">
                 {author.name}
               </h4>
+              <span className="text-subtle-medium text-gray-1">
+                {formatDateString(createdAt)}
+              </span>
             </Link>
 
             <p className="mt-2 text-small-regular text-light-2">{content}</p>
@@ -120,7 +126,6 @@ function PostCard({
           className="mt-5 flex items-center"
         >
           <p className="text-subtle-medium text-gray-1">
-            {formatDateString(createdAt)}
             {community && ` - ${community.name} Community`}
           </p>
 
