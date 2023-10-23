@@ -179,37 +179,24 @@ export async function getActivity(userId: string) {
       select: "name image _id",
     });
 
-    // Find posts liked by others (excluding the user's own posts and posts they liked)
-    const postsLikedByOthers = await Post.find({
-      _id: { $nin: userPosts.map((post) => post._id) }, // Exclude the user's own posts
-      likes: { $ne: userId }, // Exclude posts liked by the user
-    }).populate({
-      path: "author",
-      model: User,
-      select: "name image _id createdAt",
-    });
-
-    // Combine all activities into a single array with activityType and createdAt properties
-    const allActivities = [
+    // Filter and include only activities related to posts created by the current user
+    const activitiesOfUserPosts = [
       ...replies.map((activity) => ({
         ...activity._doc,
-        activityType: "replied",
+        activityType: "reply",
         createdAt: activity.createdAt,
       })),
       ...likedPosts.map((activity) => ({
         ...activity._doc,
-        activityType: "liked",
-        createdAt: activity.createdAt,
-      })),
-      ...postsLikedByOthers.map((activity) => ({
-        ...activity._doc,
-        activityType: "liked",
+        activityType: "like",
         createdAt: activity.createdAt,
       })),
     ];
+
     // Sort activities by date created (newest first)
-    allActivities.sort((a, b) => b.createdAt - a.createdAt);
-    return allActivities;
+    activitiesOfUserPosts.sort((a, b) => b.createdAt - a.createdAt);
+
+    return activitiesOfUserPosts;
   } catch (error) {
     console.error("Error fetching activities: ", error);
     throw error;
