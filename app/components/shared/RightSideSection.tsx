@@ -16,10 +16,10 @@ async function RightSidebar() {
   const suggestedCOmmunities = await fetchCommunities({ pageSize: 4 });
 
   return (
-    <section className="custom-scrollbar rightsidebar">
+    <section className="custom-scrollbar rightsideSection">
       <div className="flex flex-1 flex-col justify-start">
         <h3 className="text-heading4-medium text-light-1">
-          Suggested Communities
+          Explore Communities
         </h3>
 
         <div className="mt-7 flex w-[350px] flex-col gap-9">
@@ -45,7 +45,7 @@ async function RightSidebar() {
       </div>
 
       <div className="flex flex-1 flex-col justify-start">
-        <h3 className="text-heading4-medium text-light-1">Similar Minds</h3>
+        <h3 className="text-heading4-medium text-light-1">Common Interests</h3>
         <div className="mt-7 flex w-[350px] flex-col gap-10">
           {similarMinds.users.length > 0 ? (
             <>
