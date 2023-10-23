@@ -147,7 +147,6 @@ export async function fetchUserPosts(userId: string) {
     throw error;
   }
 }
-
 export async function getActivity(userId: string) {
   try {
     DBConnection();
@@ -180,6 +179,7 @@ export async function getActivity(userId: string) {
       select: "name image _id",
     });
 
+    // Find posts liked by others (excluding the user's own posts and posts they liked)
     const postsLikedByOthers = await Post.find({
       _id: { $nin: userPosts.map((post) => post._id) }, // Exclude the user's own posts
       likes: { $ne: userId }, // Exclude posts liked by the user
@@ -188,9 +188,30 @@ export async function getActivity(userId: string) {
       model: User,
       select: "name image _id createdAt",
     });
-    return { replies, likedPosts, postsLikedByOthers };
+
+    // Combine all activities into a single array with activityType and createdAt properties
+    const allActivities = [
+      ...replies.map((activity) => ({
+        ...activity._doc,
+        activityType: "replied",
+        createdAt: activity.createdAt,
+      })),
+      ...likedPosts.map((activity) => ({
+        ...activity._doc,
+        activityType: "liked",
+        createdAt: activity.createdAt,
+      })),
+      ...postsLikedByOthers.map((activity) => ({
+        ...activity._doc,
+        activityType: "liked",
+        createdAt: activity.createdAt,
+      })),
+    ];
+    // Sort activities by date created (newest first)
+    allActivities.sort((a, b) => b.createdAt - a.createdAt);
+    return allActivities;
   } catch (error) {
-    console.error("Error fetching likes: ", error);
+    console.error("Error fetching activities: ", error);
     throw error;
   }
 }
