@@ -4,13 +4,6 @@ import { headers } from "next/headers";
 import { IncomingHttpHeaders } from "http";
 
 import { NextResponse } from "next/server";
-import {
-  addMemberToCommunity,
-  createCommunity,
-  removeUserFromCommunity,
-  updateCommunityInfo,
-  deleteCommunity,
-} from "@/lib/actions/communityActions";
 type EventType =
   | "organization.created"
   | "organizationInvitation.created"
@@ -34,9 +27,6 @@ export const POST = async (request: Request) => {
     "svix-timestamp": header.get("svix-timestamp"),
     "svix-signature": header.get("svix-signature"),
   };
-
-  // Activitate Webhook in the Clerk Dashboard.
-  // After adding the endpoint, you'll see the secret on the right side.
   const wh = new Webhook(process.env.NEXT_CLERK_WEBHOOK_SECRET || "");
 
   let evnt: Event | null = null;
