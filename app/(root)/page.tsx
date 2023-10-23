@@ -38,8 +38,8 @@ const Home = async ({
                 currentUserId={user.id}
                 parentId={post.parentId}
                 content={post.text}
-                author={post.author || userInfo} //Todo: take a look at why post.author is null
-                community={post.community || "Web community"}
+                author={post.author || userInfo}
+                community={post.community}
                 createdAt={post.createdAt}
                 comments={post.children}
               />
@@ -47,12 +47,6 @@ const Home = async ({
           </>
         )}
       </section>
-
-      {/* <Pagination
-        path="/"
-        pageNumber={searchParams?.page ? +searchParams.page : 1}
-        isNext={result.isNext}
-      /> */}
     </>
   );
 };
