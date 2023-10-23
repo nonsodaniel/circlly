@@ -28,5 +28,6 @@ export interface IPostCardProps {
       image: string;
     };
   }[];
+  likes?: string[];
   isComment?: boolean;
 }

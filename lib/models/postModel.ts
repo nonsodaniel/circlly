@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { string } from "zod";
 
 const postSchema = new mongoose.Schema({
   text: {
@@ -21,6 +22,12 @@ const postSchema = new mongoose.Schema({
   parentId: {
     type: String,
   },
+  likes: [
+    {
+      type: String,
+      ref: "User",
+    },
+  ],
   children: [
     {
       type: mongoose.Schema.Types.ObjectId,

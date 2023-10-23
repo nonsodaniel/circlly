@@ -5,6 +5,11 @@ export const sidebarLinks = [
     label: "Home",
   },
   {
+    imgURL: "./assets/create.svg",
+    route: "/create-post",
+    label: "Create Post",
+  },
+  {
     imgURL: "./assets/search.svg",
     route: "/search",
     label: "Search",
@@ -14,11 +19,7 @@ export const sidebarLinks = [
     route: "/activity",
     label: "Activity",
   },
-  {
-    imgURL: "./assets/create.svg",
-    route: "/create-post",
-    label: "Create Post",
-  },
+
   {
     imgURL: "./assets/community.svg",
     route: "/communities",

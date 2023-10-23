@@ -169,3 +169,35 @@ export const addCommentToPost = async (
     throw new Error("Unable to add comment");
   }
 };
+
+export const likePost = async (postId: string, userId: string) => {
+  try {
+    // Find the post by its ID
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    // Check if the user has already liked the post
+    const hasLiked = post.likes.includes(userId);
+
+    if (hasLiked) {
+      // User already liked the post, so remove the like
+      post.likes = post.likes.filter(
+        (likeId: any) => likeId.toString() !== userId.toString()
+      );
+    } else {
+      // User hasn't liked the post, so add the like
+      post.likes.push(userId);
+    }
+
+    // Save the updated post with likes to the database
+    await post.save();
+
+    return post.likes;
+  } catch (error) {
+    console.error("Error while liking post:", error);
+    throw new Error("Unable to like/unlike post");
+  }
+};
