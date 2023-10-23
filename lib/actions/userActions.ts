@@ -170,9 +170,27 @@ export async function getActivity(userId: string) {
       select: "name image _id",
     });
 
-    return replies;
+    // Find the user's liked posts
+    const likedPosts = await Post.find({
+      _id: { $in: childPostIds },
+      likes: userId,
+    }).populate({
+      path: "author",
+      model: User,
+      select: "name image _id",
+    });
+
+    const postsLikedByOthers = await Post.find({
+      _id: { $nin: userPosts.map((post) => post._id) }, // Exclude the user's own posts
+      likes: { $ne: userId }, // Exclude posts liked by the user
+    }).populate({
+      path: "author",
+      model: User,
+      select: "name image _id createdAt",
+    });
+    return { replies, likedPosts, postsLikedByOthers };
   } catch (error) {
-    console.error("Error fetching replies: ", error);
+    console.error("Error fetching likes: ", error);
     throw error;
   }
 }

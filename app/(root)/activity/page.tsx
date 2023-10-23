@@ -12,15 +12,16 @@ async function Page() {
   if (!userInfo?.onboarded) redirect("/onboarding");
 
   const activity = await getActivity(userInfo._id);
+  const isLikedPostExist = !!activity?.postsLikedByOthers.length;
 
   return (
     <>
       <h1 className="head-text">Activity</h1>
 
       <section className="mt-10 flex flex-col gap-5">
-        {activity.length > 0 ? (
+        {activity?.replies.length > 0 ? (
           <>
-            {activity.map((activity) => (
+            {activity.replies.map((activity) => (
               <Link key={activity._id} href={`/post/${activity.parentId}`}>
                 <article className="activity-card">
                   <Image
@@ -40,9 +41,36 @@ async function Page() {
               </Link>
             ))}
           </>
-        ) : (
-          <p className="!text-base-regular text-light-3">No activity yet</p>
-        )}
+        ) : null}
+
+        {isLikedPostExist ? (
+          <>
+            {activity.postsLikedByOthers.map((details) => {
+              if (details.author) {
+                const author = details.author;
+                return (
+                  <Link key={details._id} href={`/post/${details.parentId}`}>
+                    <article className="activity-card">
+                      <Image
+                        src={author.image}
+                        alt="user_logo"
+                        width={20}
+                        height={20}
+                        className="rounded-full object-cover"
+                      />
+                      <p className="!text-small-regular text-light-1">
+                        <span className="mr-1 text-primary-500">
+                          {author.name}
+                        </span>{" "}
+                        liked to your post
+                      </p>
+                    </article>
+                  </Link>
+                );
+              }
+            })}
+          </>
+        ) : null}
       </section>
     </>
   );
