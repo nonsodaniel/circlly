@@ -9,7 +9,7 @@ interface Props {
   routeType: string;
 }
 
-const Searchbar = async ({ routeType }: Props) => {
+const Searchbar = ({ routeType }: Props) => {
   const router = useRouter();
   const [search, setSearch] = useState("");
 
