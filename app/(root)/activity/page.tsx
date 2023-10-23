@@ -39,7 +39,7 @@ async function Page() {
                         <span className="mr-1 text-primary-500">
                           {author.name}
                         </span>
-                        {details.activityType} to your post
+                        {details.activityType} your post
                         <span className="text-subtle-medium text-gray-1 px-4">
                           on {formatDateString(details.createdAt)}
                         </span>
