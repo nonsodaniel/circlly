@@ -13,7 +13,7 @@ function PostCard({
   comments,
   isComment,
 }: IPostCardProps) {
-  console.log({ author });
+  console.log("COM", community);
   return (
     <article
       className={`flex w-full flex-col rounded-xl ${

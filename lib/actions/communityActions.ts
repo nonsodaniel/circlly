@@ -256,7 +256,6 @@ export async function deleteCommunity(communityId: string) {
   try {
     DBConnection();
 
-    // Find the community by its ID and delete it
     const deletedCommunity = await Community.findOneAndDelete({
       id: communityId,
     });
