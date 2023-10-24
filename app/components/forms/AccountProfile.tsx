@@ -64,7 +64,7 @@ const AccountProfile = ({ title, user }: IAccountProfileProps) => {
       path: pathname,
     });
 
-    if (pathname === "/profile/edit") {
+    if (pathname === "/profile") {
       router.back();
     } else {
       router.push("/");

@@ -183,12 +183,12 @@ export async function getActivity(userId: string) {
     const activitiesOfUserPosts = [
       ...replies.map((activity) => ({
         ...activity._doc,
-        activityType: "reply",
+        activityType: "replied",
         createdAt: activity.createdAt,
       })),
       ...likedPosts.map((activity) => ({
         ...activity._doc,
-        activityType: "like",
+        activityType: "liked",
         createdAt: activity.createdAt,
       })),
     ];
